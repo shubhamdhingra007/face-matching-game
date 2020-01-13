@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Matching Game</title>
+  <meta name="author" value="Shubham Dhingra">
+  <style>
+  img {position: absolute}
+  div {position: absolute;width: 700px;height: 500px}
+  .adjust {left: 750px;border-left: 1px solid black}
+  </style>
+</head>
+<body onload="generatefaces()">
+  <h1 style="font-family:Monotype Corsiva;text-align:center"><big><big><b>Matching Game</b></big></big></h1>
+  <p style="text-align:center"><big>There is one extra smiley on the left side at each level<big><big><i>. Find & Click on that extra smiley.</i></big></big> You can restart the game anytime by pressing F5</big></p>
+  <p style="text-align:center" id = "p1">Levels</p>
+  <p style="text-align:center" id = "p2">Time Left: 60 seconds</p>
+  <hr><div id="leftside"></div>
+  <div id="rightside" class="adjust"></div>
+  <script>
+    var numberOfFaces = 5;
+    var theLeftSide = document.getElementById("leftside");
+    var theRightSide = document.getElementById("rightside");
+    var theBody = document.getElementsByTagName("body")[0];
+    var para1 = document.getElementById("p1");
+    var clock = document.getElementById("p2");
+    var clockinfo = setInterval(set_timer,1000);
+    var a = 90,b = 90,c = 120, d = 180;
+    function set_timer()
+    {
+      function clear()
+      {
+        clock.removeChild(clock.firstChild);
+      }
+      if((numberOfFaces/5) > 10) // changed to max level 10 from 20
+      {
+        alert("The free version of this game is limited to 10 levels.\nTo unlock more exciting levels, pay $100 to \nShubham Dhingra\nAccount no.-420840\nContact-Vo to hai hi tere paas\nEmail-nahi_bataunga@gmail.com");
+        game_over_again();
+      }
+      else if((numberOfFaces/5) > 15)
+      {
+        if (c != 0) {d += c; c = 0;}
+        d--;
+        clear();
+        clock.appendChild(document.createTextNode("Time Left: "+d+" seconds"));
+        if(d == 0)
+          game_over();
+      }
+      else if((numberOfFaces/5) > 10)
+      {
+        if (b != 0) {c += b; b = 0;}
+        c--;
+        clear();
+        clock.appendChild(document.createTextNode("Time Left: "+c+" seconds"));
+        if(c == 0)
+          game_over();
+      }
+      else if((numberOfFaces/5) > 5)
+      {
+        if (a != 0) { b += a; a = 0;}
+        b--;
+        clear();
+        clock.appendChild(document.createTextNode("Time Left: "+b+" seconds"));
+        if(b == 0)
+          game_over();
+      }
+      else
+      {
+        a--;
+        clear();
+        clock.appendChild(document.createTextNode("Time Left: "+a+" seconds"));
+        if(a == 0)
+          game_over();
+      }
+    }
+    function generatefaces()
+    {
+      var i = 0;
+      para1.removeChild(para1.firstChild);
+      var txt = document.createTextNode("Level-"+(numberOfFaces/5)+" Faces:"+numberOfFaces);
+      para1.appendChild(txt);
+      while (i < numberOfFaces)
+      {
+        var theimg = document.createElement("img");
+        theimg.src = "http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png";
+        var top_pos = Math.random()*400;
+        top_pos = Math.floor(top_pos);
+        var left_pos = Math.random()*600;
+        left_pos = Math.floor(left_pos);
+        theimg.style.top = top_pos + "px";
+        theimg.style.left = left_pos + "px";
+        theLeftSide.appendChild(theimg);
+        i++;
+      }
+      var leftSideImages = theLeftSide.cloneNode(true);
+      leftSideImages.removeChild(leftSideImages.lastChild);
+      theRightSide.appendChild(leftSideImages);
+      theLeftSide.lastChild.onclick = function nextlevel(click){
+        click.stopPropagation();
+        numberOfFaces += 5;
+        while(theLeftSide.firstChild)
+        theLeftSide.removeChild(theLeftSide.firstChild);
+        while(theRightSide.firstChild)
+        theRightSide.removeChild(theRightSide.firstChild);
+        generatefaces();
+      };
+      theBody.onclick = function over()
+      {
+        clearInterval(clockinfo);
+        alert("Wrong Selection!\n\nGame Over");
+        theBody.onclick = null;
+        theLeftSide.lastChild.onclick = null;
+      };
+    }
+    function game_over()
+    {
+      clearInterval(clockinfo);
+      alert("Time up! \n\nGame Over!");
+      theBody.onclick = null;
+      theLeftSide.lastChild.onclick = null;
+    }
+    function game_over_again()
+    {
+      clearInterval(clockinfo);
+      theBody.onclick = null;
+      theLeftSide.lastChild.onclick = null;
+    }
+  </script>
+</body>
+</html>
